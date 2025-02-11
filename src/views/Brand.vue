@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-// import { useToast } from "primevue/usetoast";
 import Button from "primevue/button";
 import Drawer from "@/components/Drawer.vue";
 import InputText from "primevue/inputtext";
 import Textarea from "primevue/textarea";
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
+import type { ToastMessageOptions } from "primevue";
 import { useToastComposable } from "@/composables/useToastComposable";
 
 import type { Brand } from "@/types/api/brand";
@@ -15,12 +15,10 @@ import { useBrandStore } from '@/stores/brandStore';
 import { useLoaderStore } from '@/stores/loaderStore';
 import api from '@/services/api';
 import { storeToRefs } from 'pinia';
-// import Loader from '@/components/Loader.vue';
 
 const { isToggle, toggle } = useToggle();
 const brandStore = useBrandStore();
 const loaderStore = useLoaderStore();
-// const { isLoading } = storeToRefs(loaderStore);
 const { brand, errors, brandInfo } = storeToRefs(brandStore);
 const { showToast } = useToastComposable();
 

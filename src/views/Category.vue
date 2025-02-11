@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-// import { useToast } from "primevue/usetoast";
 import Button from "primevue/button";
 import Drawer from "@/components/Drawer.vue";
 import InputText from "primevue/inputtext";
@@ -10,17 +9,15 @@ import Column from 'primevue/column';
 import type { Category } from "@/types/api/category";
 import { useToggle } from '@/composables/Toggle';
 import { useCategoryStore } from '@/stores/categoryStore';
-// import { useLoaderStore } from '@/stores/loaderStore';
+import type { ToastMessageOptions } from "primevue";
 import { useToastComposable } from "@/composables/useToastComposable";
 
 import api from '@/services/api';
 import { storeToRefs } from 'pinia';
-// import Loader from '@/components/Loader.vue';
 
 const { isToggle, toggle } = useToggle();
 const categoryStore = useCategoryStore();
-// const loaderStore = useLoaderStore();
-// const { isLoading } = storeToRefs(loaderStore);
+
 const { category, errors, getCategoryData } = storeToRefs(categoryStore);
 
 const getUpdatedCategoryId = ref<string>()
@@ -139,18 +136,6 @@ const editCategory = (data: Category) => {
         <small class="p-error block">{{
           errors.description }}</small>
       </div>
-
-      <!-- <div class="field mb-4">
-        <label class="block font-bold mb-2">Image
-          Upload*</label>
-        <input type="file"
-          name="image"
-          className="file-input file-input-bordered w-full max-w-xs ps-0"
-          @change="categoryStore.onImageUpload" />
-        <small class="p-error block">{{
-          errors.image }}</small>
-      </div> -->
-
       <div class="flex justify-end gap-2 mt-4">
         <Button label="Cancel"
           severity="secondary"
@@ -162,7 +147,6 @@ const editCategory = (data: Category) => {
     </form>
   </template>
 </Drawer>
-<!-- <Loader :loader="isLoading" /> -->
 <DataTable :value="getCategoryData"
   paginator
   :rows="6"

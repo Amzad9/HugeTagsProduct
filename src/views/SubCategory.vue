@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref, watch, watchEffect } from 'vue';
-// import { useToast } from "primevue/usetoast";
 import Button from "primevue/button";
 import Drawer from "@/components/Drawer.vue";
 import InputText from "primevue/inputtext";
@@ -13,18 +12,15 @@ import Select from 'primevue/select';
 import type { Category } from "@/types/api/category";
 import { useToggle } from '@/composables/Toggle';
 import { useSubCategoryStore } from '@/stores/subCategoryStore';
-// import { useLoaderStore } from '@/stores/loaderStore';
+import type { ToastMessageOptions } from "primevue";
 import { useCategoryStore } from '@/stores/categoryStore';
 
 import { storeToRefs } from 'pinia';
-// import Loader from '@/components/Loader.vue';
 import api from '@/services/api';
 import { useToastComposable } from "@/composables/useToastComposable";
 
 const { isToggle, toggle } = useToggle();
 const subCategoryStore = useSubCategoryStore();
-// const loaderStore = useLoaderStore();
-// const { isLoading } = storeToRefs(loaderStore);
 const { subcategory, errors, getSubCategoryData } = storeToRefs(subCategoryStore);
 const categoryStore = useCategoryStore();
 const { getCategoryData } = storeToRefs(categoryStore);
@@ -202,17 +198,4 @@ const editSubCategory = (categoryData: Category) => {
 </DataTable>
 </template>
 
-<style scoped>
-.p-invalid {
-  border-color: var(--red-500);
-}
-
-.field {
-  margin-bottom: 1.5rem;
-}
-
-.p-error {
-  color: var(--red-500);
-  font-size: 0.875rem;
-}
-</style>
+<style scoped></style>

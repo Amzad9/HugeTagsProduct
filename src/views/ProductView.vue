@@ -8,11 +8,11 @@ import Textarea from "primevue/textarea";
 import Dropdown from "primevue/dropdown";
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
+import type { ToastMessageOptions } from "primevue";
 
 import type { Product } from "@/types/api/product";
 import { useToggle } from '@/composables/Toggle';
 import { useCategoryStore } from '@/stores/categoryStore';
-// import { useLoaderStore } from '@/stores/loaderStore';
 import { useProductStore } from '@/stores/productStore';
 import { useSubCategoryStore } from "@/stores/subCategoryStore";
 import { useBrandStore } from '@/stores/brandStore';
@@ -20,15 +20,12 @@ import { useToastComposable } from "@/composables/useToastComposable";
 
 import api from '@/services/api';
 import { storeToRefs } from 'pinia';
-// import Loader from '@/components/Loader.vue';
 
 const { isToggle, toggle } = useToggle();
 const categoryStore = useCategoryStore();
 const productStore = useProductStore();
-// const loaderStore = useLoaderStore();
 const brandStore = useBrandStore();
 const subCategoryStore = useSubCategoryStore();
-// const { isLoading } = storeToRefs(loaderStore);
 const { brandInfo } = storeToRefs(brandStore);
 const { productInfo, product, errors } = storeToRefs(productStore);
 const { getCategoryData } = storeToRefs(categoryStore);
@@ -292,17 +289,4 @@ const editCategory = (data: Product) => {
 </DataTable>
 </template>
 
-<style scoped>
-.p-invalid {
-  border-color: var(--red-500);
-}
-
-.field {
-  margin-bottom: 1.5rem;
-}
-
-.p-error {
-  color: var(--red-500);
-  font-size: 0.875rem;
-}
-</style>
+<style scoped></style>
