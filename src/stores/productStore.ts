@@ -99,25 +99,21 @@ export const useProductStore = defineStore('product', () => {
 
   const fetchProducts = async () => {
     try {
-      startLoading();
       const response = await api.getProducts();
       productInfo.value = response.data.payload;
     } catch (error) {
       console.error('Error fetching products:', error);
     } finally {
-      stopLoading();
     }
   };
 
   const deleteProduct = async (id: string) => {
     try {
-      startLoading();
       await api.deleteProduct(id);
       fetchProducts();
     } catch (error) {
       console.error('Error deleting product:', error);
     } finally {
-      stopLoading();
     }
   };
 

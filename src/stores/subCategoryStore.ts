@@ -60,15 +60,12 @@ export const useSubCategoryStore = defineStore("subcategory", () => {
 
   const getSubCategory = async () => {
     try {
-      startLoading()
       const response = await api.getSubCategories();
       console.log("response", response);
       getSubCategoryData.value = response.data.payload;
       console.log(getSubCategoryData.value)
     } catch (error) {
       throw error;
-    } finally {
-      stopLoading()
     }
   }
 

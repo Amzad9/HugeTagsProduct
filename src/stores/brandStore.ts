@@ -49,14 +49,11 @@ export const useBrandStore = defineStore("brand", () => {
 
   const fetchBrands = async () => {
     try {
-      startLoading()
       const response = await api.getBrand();
       brandInfo.value = response.data.payload;
       console.log(brandInfo.value)
     } catch (error) {
       throw error;
-    } finally {
-      stopLoading()
     }
   }
 

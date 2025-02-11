@@ -2,14 +2,16 @@
 import { menuItems } from '@/types/menu/menu';
 </script>
 <template>
-<ul
-  class="w-64 bg-gray-800 text-white h-screen p-4 space-y-4">
-  <li v-for="item in menuItems"
-    :key="item.path">
-    <RouterLink :to="item.path"
-      class="flex py-6 border-b">
-      {{ item.name }}
-    </RouterLink>
-  </li>
-</ul>
+<div class="card rounded-0">
+  <ul
+    class="w-64 text-white border-r-1 border-gray-800 h-screen p-4 space-y-4">
+    <li v-for="item in menuItems"
+      :key="item.path">
+      <RouterLink :to="item.path"
+        class="flex py-6 border-b border-gray-800">
+        {{ item.name }}
+      </RouterLink>
+    </li>
+  </ul>
+</div>
 </template>

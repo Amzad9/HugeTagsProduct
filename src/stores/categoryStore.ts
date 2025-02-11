@@ -46,29 +46,26 @@ export const useCategoryStore = defineStore("category", () => {
       errors[key as keyof ValidationErrors] = "";
     });
   }
-  const onImageUpload = (e: Event) => {
-    const target = e.target as HTMLInputElement | null;
-    if (!target || !target.files) {
-      console.log("No file selected");
-      return;
-    }
-    const file = target.files[0];
-    console.log("file", file);
-    if (!file) return;
-    category.image = file;
-  }
+  // const onImageUpload = (e: Event) => {
+  //   const target = e.target as HTMLInputElement | null;
+  //   if (!target || !target.files) {
+  //     console.log("No file selected");
+  //     return;
+  //   }
+  //   const file = target.files[0];
+  //   console.log("file", file);
+  //   if (!file) return;
+  //   category.image = file;
+  // }
 
 
   const getCategory = async () => {
     try {
-      startLoading()
       const response = await api.getCategories();
       getCategoryData.value = response.data.payload;
       console.log(getCategoryData.value)
     } catch (error) {
       throw error;
-    } finally {
-      stopLoading()
     }
   }
 
@@ -88,7 +85,7 @@ export const useCategoryStore = defineStore("category", () => {
   return {
     category,
     errors,
-    onImageUpload,
+    // onImageUpload,
     formValidation,
     formReset,
     getCategory,

@@ -13,12 +13,12 @@ import { useBrandStore } from '@/stores/brandStore';
 import { useLoaderStore } from '@/stores/loaderStore';
 import api from '@/services/api';
 import { storeToRefs } from 'pinia';
-import Loader from '@/components/Loader.vue';
+// import Loader from '@/components/Loader.vue';
 
 const { isToggle, toggle } = useToggle();
 const brandStore = useBrandStore();
 const loaderStore = useLoaderStore();
-const { isLoading } = storeToRefs(loaderStore);
+// const { isLoading } = storeToRefs(loaderStore);
 const { brand, errors, brandInfo } = storeToRefs(brandStore);
 
 const onImageUpload = (event: Event) => {
@@ -82,7 +82,8 @@ const editBrand = (data: Brand) => {
 
 </script>
 
-<template><Button label="Add Brand"
+<template><!-- <Loader :loader="isLoading" /> -->
+<Button label="Add Brand"
   icon="pi pi-plus"
   severity="primary"
   @click="toggle" />
@@ -142,7 +143,7 @@ const editBrand = (data: Brand) => {
     </form>
   </template>
 </Drawer>
-<Loader :loader="isLoading" />
+
 <DataTable :value="brandInfo"
   paginator
   :rows="6"

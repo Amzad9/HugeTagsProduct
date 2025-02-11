@@ -11,21 +11,21 @@ import Column from 'primevue/column';
 import type { Product } from "@/types/api/product";
 import { useToggle } from '@/composables/Toggle';
 import { useCategoryStore } from '@/stores/categoryStore';
-import { useLoaderStore } from '@/stores/loaderStore';
+// import { useLoaderStore } from '@/stores/loaderStore';
 import { useProductStore } from '@/stores/productStore';
 import { useSubCategoryStore } from "@/stores/subCategoryStore";
 import { useBrandStore } from '@/stores/brandStore';
 import api from '@/services/api';
 import { storeToRefs } from 'pinia';
-import Loader from '@/components/Loader.vue';
+// import Loader from '@/components/Loader.vue';
 
 const { isToggle, toggle } = useToggle();
 const categoryStore = useCategoryStore();
 const productStore = useProductStore();
-const loaderStore = useLoaderStore();
+// const loaderStore = useLoaderStore();
 const brandStore = useBrandStore();
 const subCategoryStore = useSubCategoryStore();
-const { isLoading } = storeToRefs(loaderStore);
+// const { isLoading } = storeToRefs(loaderStore);
 const { brandInfo } = storeToRefs(brandStore);
 const { productInfo, product, errors } = storeToRefs(productStore);
 const { getCategoryData } = storeToRefs(categoryStore);
@@ -46,7 +46,6 @@ const onSubmitForm = async () => {
   //   return;
   // }
   try {
-    loaderStore.startLoading();
     const formData = new FormData();
 
     formData.append('title', product.value.title ?? '');
@@ -75,8 +74,6 @@ const onSubmitForm = async () => {
     isToggle.value = false;
   } catch (error) {
     console.error(error);
-  } finally {
-    loaderStore.stopLoading();
   }
 };
 
@@ -88,9 +85,7 @@ const editCategory = (data: Product) => {
 };
 
 </script>
-<template>
-<Loader :loader="isLoading" />
-<Button label="Add Category"
+<template><Button label="Add Category"
   icon="pi pi-plus"
   severity="primary"
   @click="toggle" />

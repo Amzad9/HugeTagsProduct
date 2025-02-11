@@ -10,15 +10,15 @@ import Column from 'primevue/column';
 import type { Category } from "@/types/api/category";
 import { useToggle } from '@/composables/Toggle';
 import { useCategoryStore } from '@/stores/categoryStore';
-import { useLoaderStore } from '@/stores/loaderStore';
+// import { useLoaderStore } from '@/stores/loaderStore';
 import api from '@/services/api';
 import { storeToRefs } from 'pinia';
-import Loader from '@/components/Loader.vue';
+// import Loader from '@/components/Loader.vue';
 
 const { isToggle, toggle } = useToggle();
 const categoryStore = useCategoryStore();
-const loaderStore = useLoaderStore();
-const { isLoading } = storeToRefs(loaderStore);
+// const loaderStore = useLoaderStore();
+// const { isLoading } = storeToRefs(loaderStore);
 const { category, errors, getCategoryData } = storeToRefs(categoryStore);
 
 const getUpdatedCategoryId = ref<string>()
@@ -29,7 +29,6 @@ const onSubmitForm = async () => {
     return;
   }
   try {
-    loaderStore.startLoading();
     const formData = new FormData();
     formData.append('name', category.value.name as string);
     formData.append('description', category.value.description as string);
@@ -46,19 +45,14 @@ const onSubmitForm = async () => {
     }
   } catch (error) {
     throw error;
-  } finally {
-    loaderStore.stopLoading();
   }
 };
 
 const deleteCategory = async (id: string) => {
   try {
-    loaderStore.startLoading()
     await categoryStore.deleteCategory(id);
   } catch (error) {
     throw error;
-  } finally {
-    loaderStore.stopLoading()
   }
 };
 
@@ -132,7 +126,7 @@ const editCategory = (categoryData: Category) => {
     </form>
   </template>
 </Drawer>
-<Loader :loader="isLoading" />
+<!-- <Loader :loader="isLoading" /> -->
 <DataTable :value="getCategoryData"
   paginator
   :rows="6"

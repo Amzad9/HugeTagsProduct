@@ -13,17 +13,17 @@ import Select from 'primevue/select';
 import type { Category } from "@/types/api/category";
 import { useToggle } from '@/composables/Toggle';
 import { useSubCategoryStore } from '@/stores/subCategoryStore';
-import { useLoaderStore } from '@/stores/loaderStore';
+// import { useLoaderStore } from '@/stores/loaderStore';
 import { useCategoryStore } from '@/stores/categoryStore';
 
 import { storeToRefs } from 'pinia';
-import Loader from '@/components/Loader.vue';
+// import Loader from '@/components/Loader.vue';
 import api from '@/services/api';
 
 const { isToggle, toggle } = useToggle();
 const subCategoryStore = useSubCategoryStore();
-const loaderStore = useLoaderStore();
-const { isLoading } = storeToRefs(loaderStore);
+// const loaderStore = useLoaderStore();
+// const { isLoading } = storeToRefs(loaderStore);
 const { subcategory, errors, getSubCategoryData } = storeToRefs(subCategoryStore);
 const categoryStore = useCategoryStore();
 const { getCategoryData } = storeToRefs(categoryStore);
@@ -42,10 +42,10 @@ watch(selectedCategoryId, (newValue) => {
 
 
 const onSubmitForm = async () => {
-  if (!subCategoryStore.formValidation()) {
-    console.error("Form validation failed");
-    return;
-  }
+  // if (!subCategoryStore.formValidation()) {
+  //   console.error("Form validation failed");
+  //   return;
+  // }
   console.log("subcategory.value.image", subcategory.value)
   try {
     const formData = new FormData();
@@ -73,12 +73,9 @@ const onSubmitForm = async () => {
 }
 const deleteSubCategory = async (id: string) => {
   try {
-    loaderStore.startLoading()
     await subCategoryStore.deleteCategory(id);
   } catch (error) {
     throw error;
-  } finally {
-    loaderStore.stopLoading()
   }
 };
 
@@ -92,7 +89,7 @@ const editSubCategory = (categoryData: Category) => {
 
 </script>
 
-<template><Button label="Add Sub Category"
+<template><Button label="Add Sub Sub Category"
   icon="pi pi-plus"
   severity="primary"
   @click="toggle" />
@@ -101,7 +98,7 @@ const editSubCategory = (categoryData: Category) => {
   :modal="true"
   :closable="true">
   <template #header>
-    <h3 class="m-0">Add New Category</h3>
+    <h3 class="m-0">Add New Sub Category</h3>
   </template>
 
   <template #content>
@@ -149,7 +146,7 @@ const editSubCategory = (categoryData: Category) => {
     </form>
   </template>
 </Drawer>
-<Loader :loader="isLoading" />
+<!-- <Loader :loader="isLoading" /> -->
 <DataTable :value="getSubCategoryData"
   paginator
   :rows="6"
