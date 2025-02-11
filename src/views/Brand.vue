@@ -76,7 +76,7 @@ const onSubmitForm = async () => {
       showToast({
         severity: "error",
         summary: "Error",
-        detail: error.response?.data?.message,
+        detail: (error as { response?: { data?: { message?: string } } }).response?.data?.message,
         life: 3000,
       } as ToastMessageOptions);
     }
