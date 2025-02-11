@@ -19,6 +19,7 @@ import { useCategoryStore } from '@/stores/categoryStore';
 import { storeToRefs } from 'pinia';
 // import Loader from '@/components/Loader.vue';
 import api from '@/services/api';
+import { useToastComposable } from "@/composables/useToastComposable";
 
 const { isToggle, toggle } = useToggle();
 const subCategoryStore = useSubCategoryStore();
@@ -29,6 +30,7 @@ const categoryStore = useCategoryStore();
 const { getCategoryData } = storeToRefs(categoryStore);
 const getUpdatedCategoryId = ref<string>()
 const selectedCategoryId = ref();
+const { showToast } = useToastComposable();
 
 watch(selectedCategoryId, (newValue) => {
   if (newValue) {
@@ -46,7 +48,6 @@ const onSubmitForm = async () => {
   //   console.error("Form validation failed");
   //   return;
   // }
-  console.log("subcategory.value.image", subcategory.value)
   try {
     const formData = new FormData();
     formData.append("categoryId", selectedCategoryId.value as string);
@@ -58,24 +59,54 @@ const onSubmitForm = async () => {
     }
     console.log("getUpdatedCategoryId", getUpdatedCategoryId.value)
     if (getUpdatedCategoryId.value) {
-      await api.updateSubCategory(getUpdatedCategoryId.value, formData)
+      const res = await api.updateSubCategory(getUpdatedCategoryId.value, formData)
+      showToast({
+        severity: "success",
+        summary: "Success",
+        detail: res?.data?.message,
+        life: 3000,
+      } as ToastMessageOptions);
+      isToggle.value = false;
       subCategoryStore.formReset();
     } else {
       const response = await api.createSubCategory(formData);
-      subCategoryStore.getSubCategory();
-      subCategoryStore.formReset();
-      isToggle.value = true;
-      console.log(response);
+      if (response.status === 201) {
+        showToast({
+          severity: "success",
+          summary: "Success",
+          detail: response?.data?.message,
+          life: 3000,
+        } as ToastMessageOptions);
+        subCategoryStore.getSubCategory();
+        subCategoryStore.formReset();
+        isToggle.value = false;
+      }
     }
   } catch (error) {
-    throw error
+    showToast({
+      severity: "error",
+      summary: "Error",
+      detail: error.response?.data?.message,
+      life: 3000,
+    } as ToastMessageOptions);
   }
 }
 const deleteSubCategory = async (id: string) => {
   try {
-    await subCategoryStore.deleteCategory(id);
+    const res = await subCategoryStore.deleteCategory(id);
+    showToast({
+      severity: "success",
+      summary: "Success",
+      detail: res?.data?.message,
+      life: 3000,
+    } as ToastMessageOptions);
   } catch (error) {
-    throw error;
+    showToast({
+      severity: "error",
+      summary: "Error",
+      detail: error.response?.data?.message,
+      life: 3000,
+    } as ToastMessageOptions);
   }
 };
 

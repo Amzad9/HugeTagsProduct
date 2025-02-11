@@ -4,8 +4,7 @@ defineProps<{ loader: boolean }>()
 </script>
 <template>
 <div v-if="loader"
-  class="flex items-center justify-center h-screen z-50 fixed inset-0 bg-gray-900 bg-opacity-50">
-
+  class="flex items-center justify-center absolute top-52 left-[50%] inset-auto">
   <ProgressSpinner
     style="width: 50px; height: 50px"
     strokeWidth="8"

@@ -1,12 +1,12 @@
-
-// baseURL: "https://nichestore.vercel.app/api/v2/",
 import { useLoaderStore } from "@/stores/loaderStore";
 import axios from "axios";
-import { eventBus } from '@/utils/utils'
-import type { ToastMessageOptions } from "primevue";
+// import { useToastComposable } from "@/composables/useToastComposable";
+// import type { ToastMessageOptions } from "primevue";
+
+// const { showToast } = useToastComposable();
 
 export const service = axios.create({
-  baseURL: "https://nichestore.vercel.app/api/v2/",
+  baseURL: import.meta.env.VITE_BASE_URL,
   headers: {
     "Content-type": "application/json",
   },
@@ -25,34 +25,18 @@ service.interceptors.request.use((config) => {
 
 service.interceptors.response.use(
   (response) => {
-
-    eventBus.emit("show-toast", {
-      severity: "success",
-      summary: "Success",
-      detail: response?.data?.message,
-      life: 3000,
-    } as ToastMessageOptions);
     const loaderStore = useLoaderStore();
-    loaderStore.stopLoading(); // Stop loading when response is received
-    console.log("response", response?.data?.message)
+    loaderStore.stopLoading();
+    console.log("response", response?.data?.message);
     return response;
   },
   (error) => {
     const loaderStore = useLoaderStore();
-    loaderStore.stopLoading(); // Stop loading on error
-
+    loaderStore.stopLoading();
     if (error.response && error.response.status === 401) {
       localStorage.removeItem("token");
       location.reload();
-    } else {
-      eventBus.emit("show-toast", {
-        severity: "error",
-        summary: "Error",
-        detail: error.response?.data?.message,
-        life: 3000,
-      } as ToastMessageOptions);
     }
-    console.log("error", error.response?.data?.message)
     return Promise.reject(error);
   }
 );

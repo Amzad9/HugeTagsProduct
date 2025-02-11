@@ -5,6 +5,9 @@ import Card from 'primevue/card';
 import Layout from '@/layouts/Layout.vue';
 import SideNavigation from '@/components/SideNavigation.vue';
 import TopNavigation from '@/components/TopNavigation.vue'
+import Loader from "@/components/Loader.vue";
+import { useLoaderStore } from "@/stores/loaderStore";
+const loaderStore = useLoaderStore();
 </script>
 <template>
 <Layout>
@@ -15,8 +18,9 @@ import TopNavigation from '@/components/TopNavigation.vue'
     <TopNavigation />
   </template>
   <template #default>
-    <Card>
+    <Card class="relative">
       <template #content>
+        <Loader :loader="loaderStore.isLoading" />
         <RouterView />
       </template>
     </Card>

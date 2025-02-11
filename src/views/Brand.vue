@@ -7,6 +7,8 @@ import InputText from "primevue/inputtext";
 import Textarea from "primevue/textarea";
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
+import { useToastComposable } from "@/composables/useToastComposable";
+
 import type { Brand } from "@/types/api/brand";
 import { useToggle } from '@/composables/Toggle';
 import { useBrandStore } from '@/stores/brandStore';
@@ -20,6 +22,7 @@ const brandStore = useBrandStore();
 const loaderStore = useLoaderStore();
 // const { isLoading } = storeToRefs(loaderStore);
 const { brand, errors, brandInfo } = storeToRefs(brandStore);
+const { showToast } = useToastComposable();
 
 const onImageUpload = (event: Event) => {
   const target = event.target as HTMLInputElement;
@@ -44,31 +47,56 @@ const onSubmitForm = async () => {
       formData.append('image', brand.value.image as File);
     }
     formData.append('description', brand.value.description as string)
-
     if (getBrandId.value) {
-      await api.updateBrand(getBrandId.value, formData);
-    } else {
-      const response = await api.createBrand(formData);
-      brandStore.fetchBrands();
-      console.log(response);
+      const res = await api.updateBrand(getBrandId.value, formData);
+      showToast({
+        severity: "success",
+        summary: "Success",
+        detail: res?.data?.message,
+        life: 3000,
+      } as ToastMessageOptions);
       brandStore.formReset();
       isToggle.value = false;
+    } else {
+      const response = await api.createBrand(formData);
+      if (response.status === 201) {
+        showToast({
+          severity: "success",
+          summary: "Success",
+          detail: response?.data?.message,
+          life: 3000,
+        } as ToastMessageOptions);
+        brandStore.fetchBrands();
+        brandStore.formReset();
+        isToggle.value = false;
+      }
     }
   } catch (error) {
-    throw error;
-  } finally {
-    loaderStore.stopLoading();
+    showToast({
+      severity: "error",
+      summary: "Error",
+      detail: error.response?.data?.message,
+      life: 3000,
+    } as ToastMessageOptions);
   }
 };
 
 const deleteBrand = async (id: string) => {
   try {
-    loaderStore.startLoading()
-    await brandStore.deleteBrand(id);
+    const res = await brandStore.deleteBrand(id);
+    showToast({
+      severity: "success",
+      summary: "Success",
+      detail: res?.data?.message,
+      life: 3000,
+    } as ToastMessageOptions);
   } catch (error) {
-    throw error;
-  } finally {
-    loaderStore.stopLoading()
+    showToast({
+      severity: "error",
+      summary: "Error",
+      detail: error.response?.data?.message,
+      life: 3000,
+    } as ToastMessageOptions);
   }
 };
 

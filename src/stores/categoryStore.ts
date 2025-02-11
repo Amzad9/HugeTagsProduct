@@ -22,8 +22,6 @@ export const useCategoryStore = defineStore("category", () => {
     description: "",
     image: "",
   })
-  const loaderStore = useLoaderStore();
-  const { startLoading, stopLoading } = loaderStore;
   const formValidation = () => {
     let isValid = true;
     errors.name = category.name ? "" : "Name is required";
@@ -36,27 +34,14 @@ export const useCategoryStore = defineStore("category", () => {
 
     return isValid;
   }
-  watchEffect(() => { formValidation() })
 
   const formReset = () => {
     category.name = "";
     category.description = "";
-    category.image = "" as File | string;
     Object.keys(errors).forEach(key => {
       errors[key as keyof ValidationErrors] = "";
     });
   }
-  // const onImageUpload = (e: Event) => {
-  //   const target = e.target as HTMLInputElement | null;
-  //   if (!target || !target.files) {
-  //     console.log("No file selected");
-  //     return;
-  //   }
-  //   const file = target.files[0];
-  //   console.log("file", file);
-  //   if (!file) return;
-  //   category.image = file;
-  // }
 
 
   const getCategory = async () => {
@@ -85,7 +70,6 @@ export const useCategoryStore = defineStore("category", () => {
   return {
     category,
     errors,
-    // onImageUpload,
     formValidation,
     formReset,
     getCategory,

@@ -3,6 +3,8 @@ import { ref, reactive, watch, onMounted } from 'vue';
 import api from '@/services/api';
 import type { Product } from '@/types/api/product';
 import { useLoaderStore } from './loaderStore';
+import { useToastComposable } from "@/composables/useToastComposable";
+import type { ToastMessageOptions } from 'primevue';
 
 interface ValidationErrors {
   title: string;
@@ -30,6 +32,7 @@ export const useProductStore = defineStore('product', () => {
     rating: 0,
     reviews: [],
   });
+  const { showToast } = useToastComposable();
 
   const productInfo = ref<Product[]>([]);
   const errors = reactive<ValidationErrors>({
@@ -109,11 +112,21 @@ export const useProductStore = defineStore('product', () => {
 
   const deleteProduct = async (id: string) => {
     try {
-      await api.deleteProduct(id);
+      const res = await api.deleteProduct(id);
       fetchProducts();
+      showToast({
+        severity: "success",
+        summary: "Success",
+        detail: res?.data?.message,
+        life: 3000,
+      } as ToastMessageOptions);
     } catch (error) {
-      console.error('Error deleting product:', error);
-    } finally {
+      showToast({
+        severity: "error",
+        summary: "Error",
+        detail: (error as { response?: { data?: { message?: string } } }).response?.data?.message,
+        life: 3000,
+      } as ToastMessageOptions);
     }
   };
 

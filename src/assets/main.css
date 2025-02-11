@@ -1,2 +1,15 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 @import './base.css';
+
+.p-invalid {
+  border-color: red;
+}
+
+.field {
+  margin-bottom: 1.5rem;
+}
+
+.p-error {
+  color: red;
+  font-size: 0.875rem;
+}

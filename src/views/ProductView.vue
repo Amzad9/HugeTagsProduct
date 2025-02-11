@@ -8,6 +8,7 @@ import Textarea from "primevue/textarea";
 import Dropdown from "primevue/dropdown";
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
+
 import type { Product } from "@/types/api/product";
 import { useToggle } from '@/composables/Toggle';
 import { useCategoryStore } from '@/stores/categoryStore';
@@ -15,6 +16,8 @@ import { useCategoryStore } from '@/stores/categoryStore';
 import { useProductStore } from '@/stores/productStore';
 import { useSubCategoryStore } from "@/stores/subCategoryStore";
 import { useBrandStore } from '@/stores/brandStore';
+import { useToastComposable } from "@/composables/useToastComposable";
+
 import api from '@/services/api';
 import { storeToRefs } from 'pinia';
 // import Loader from '@/components/Loader.vue';
@@ -31,6 +34,7 @@ const { productInfo, product, errors } = storeToRefs(productStore);
 const { getCategoryData } = storeToRefs(categoryStore);
 const { getSubCategoryData } = storeToRefs(subCategoryStore);
 const updatedProductId = ref<string>();
+const { showToast } = useToastComposable();
 
 const onImageUpload = (event: Event) => {
   const target = event.target as HTMLInputElement;
@@ -64,16 +68,36 @@ const onSubmitForm = async () => {
     formData.append('brand', typeof product.value.brandId === 'object' ? product.value.brandId._id ?? '' : product.value.brandId ?? '');
 
     if (updatedProductId.value) {
-      await api.updateProduct(updatedProductId.value, formData);
+      const res = await api.updateProduct(updatedProductId.value, formData);
+      showToast({
+        severity: "success",
+        summary: "Success",
+        detail: res?.data?.message,
+        life: 3000,
+      } as ToastMessageOptions);
+      productStore.formReset();
+      isToggle.value = false;
     } else {
-      await api.createProduct(formData);
+      const response = await api.createProduct(formData);
+      if (response.status === 201) {
+        showToast({
+          severity: "success",
+          summary: "Success",
+          detail: response?.data?.message,
+          life: 3000,
+        } as ToastMessageOptions);
+        productStore.fetchProducts();
+        productStore.formReset();
+        isToggle.value = false;
+      }
     }
-
-    productStore.fetchProducts();
-    productStore.formReset();
-    isToggle.value = false;
   } catch (error) {
-    console.error(error);
+    showToast({
+      severity: "error",
+      summary: "Error",
+      detail: error.response?.data?.message,
+      life: 3000,
+    } as ToastMessageOptions);
   }
 };
 

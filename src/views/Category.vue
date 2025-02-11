@@ -11,6 +11,8 @@ import type { Category } from "@/types/api/category";
 import { useToggle } from '@/composables/Toggle';
 import { useCategoryStore } from '@/stores/categoryStore';
 // import { useLoaderStore } from '@/stores/loaderStore';
+import { useToastComposable } from "@/composables/useToastComposable";
+
 import api from '@/services/api';
 import { storeToRefs } from 'pinia';
 // import Loader from '@/components/Loader.vue';
@@ -22,46 +24,80 @@ const categoryStore = useCategoryStore();
 const { category, errors, getCategoryData } = storeToRefs(categoryStore);
 
 const getUpdatedCategoryId = ref<string>()
+const { showToast } = useToastComposable();
 
 const onSubmitForm = async () => {
-  if (!categoryStore.formValidation()) {
-    console.error("Form validation failed");
-    return;
-  }
-  try {
-    const formData = new FormData();
-    formData.append('name', category.value.name as string);
-    formData.append('description', category.value.description as string);
-    formData.append('image', category.value.image as File);
+  const formData = new FormData();
+  formData.append('name', category.value.name as string);
+  formData.append('description', category.value.description as string);
 
+  // if (!categoryStore.formValidation()) {
+  //   console.error("Form validation failed");
+  //   return;
+  // }
+  try {
     if (getUpdatedCategoryId.value) {
-      await api.updateCategory(getUpdatedCategoryId.value, formData);
+      const res = await api.updateCategory(getUpdatedCategoryId.value, formData);
+      showToast({
+        severity: "success",
+        summary: "Success",
+        detail: res?.data?.message,
+        life: 3000,
+      } as ToastMessageOptions);
+      categoryStore.formReset();
+      isToggle.value = false;
     } else {
       const response = await api.createCategory(formData);
-      categoryStore.getCategory();
-      categoryStore.formReset();
-      console.log(response);
-      isToggle.value = true;
+      if (response.status === 201) {
+        showToast({
+          severity: "success",
+          summary: "Success",
+          detail: response?.data?.message,
+          life: 3000,
+        } as ToastMessageOptions);
+        categoryStore.getCategory();
+        categoryStore.formReset();
+        console.log(response);
+        isToggle.value = false;
+      }
     }
   } catch (error) {
-    throw error;
+    showToast({
+      severity: "error",
+      summary: "Error",
+      detail: error.response?.data?.message,
+      life: 3000,
+    } as ToastMessageOptions);
   }
 };
 
 const deleteCategory = async (id: string) => {
   try {
-    await categoryStore.deleteCategory(id);
+    const res = await categoryStore.deleteCategory(id);
+    showToast({
+      severity: "success",
+      summary: "Success",
+      detail: res?.data?.message,
+      life: 3000,
+    } as ToastMessageOptions);
   } catch (error) {
-    throw error;
+    showToast({
+      severity: "error",
+      summary: "Error",
+      detail: error.response?.data?.message,
+      life: 3000,
+    } as ToastMessageOptions);
   }
 };
 
-const editCategory = (categoryData: Category) => {
-  console.log("categoryData", categoryData)
-  getUpdatedCategoryId.value = categoryData._id as string
-  category.value = { ...categoryData };
+const editCategory = (data: Category) => {
+  console.log("categoryData", data)
+  getUpdatedCategoryId.value = data._id as string
+  category.value = { ...data };
   isToggle.value = true;
 };
+
+
 
 
 </script>
@@ -151,17 +187,4 @@ const editCategory = (categoryData: Category) => {
 </DataTable>
 </template>
 
-<style scoped>
-.p-invalid {
-  border-color: var(--red-500);
-}
-
-.field {
-  margin-bottom: 1.5rem;
-}
-
-.p-error {
-  color: var(--red-500);
-  font-size: 0.875rem;
-}
-</style>
+<style scoped></style>
