@@ -87,19 +87,24 @@ const onSubmitForm = async () => {
 const deleteBrand = async (id: string) => {
   try {
     const res = await brandStore.deleteBrand(id);
-    showToast({
-      severity: "success",
-      summary: "Success",
-      detail: res?.data?.message,
-      life: 3000,
-    } as ToastMessageOptions);
+    if (res.data) {
+      showToast({
+        severity: "success",
+        summary: "Success",
+        detail: res?.data?.message,
+        life: 3000,
+      } as ToastMessageOptions);
+    }
+
   } catch (error: unknown) {
-    showToast({
-      severity: "error",
-      summary: "Error",
-      detail: error.response?.data?.message || "An unknown error occurred",
-      life: 3000,
-    } as ToastMessageOptions);
+    if (error instanceof Error) {
+      showToast({
+        severity: "error",
+        summary: "Error",
+        detail: error.response?.data?.message || "An unknown error occurred",
+        life: 3000,
+      } as ToastMessageOptions);
+    }
   }
 };
 
