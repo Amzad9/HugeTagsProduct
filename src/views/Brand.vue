@@ -47,12 +47,14 @@ const onSubmitForm = async () => {
     formData.append('description', brand.value.description as string)
     if (getBrandId.value) {
       const res = await api.updateBrand(getBrandId.value, formData);
-      showToast({
-        severity: "success",
-        summary: "Success",
-        detail: res?.data?.message,
-        life: 3000,
-      } as ToastMessageOptions);
+      if (res && res.data) {
+        showToast({
+          severity: "success",
+          summary: "Success",
+          detail: res.data.message,
+          life: 3000,
+        } as ToastMessageOptions);
+      }
       brandStore.formReset();
       isToggle.value = false;
     } else {
@@ -70,12 +72,14 @@ const onSubmitForm = async () => {
       }
     }
   } catch (error) {
-    showToast({
-      severity: "error",
-      summary: "Error",
-      detail: error.response?.data?.message,
-      life: 3000,
-    } as ToastMessageOptions);
+    if (error instanceof Error) {
+      showToast({
+        severity: "error",
+        summary: "Error",
+        detail: error.response?.data?.message,
+        life: 3000,
+      } as ToastMessageOptions);
+    }
   }
 };
 
@@ -202,17 +206,4 @@ const editBrand = (data: Brand) => {
 </DataTable>
 </template>
 
-<style scoped>
-.p-invalid {
-  border-color: var(--red-500);
-}
-
-.field {
-  margin-bottom: 1.5rem;
-}
-
-.p-error {
-  color: var(--red-500);
-  font-size: 0.875rem;
-}
-</style>
+<style scoped></style>

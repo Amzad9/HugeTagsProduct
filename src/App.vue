@@ -2,10 +2,8 @@
 import { onMounted } from "vue";
 import { useToast } from "primevue/usetoast";
 import Toast from "primevue/toast";
-import { eventBus } from "@/utils/utils"; // ✅ Import the shared event bus
-
-
-import type { ToastMessageOptions } from "primevue/toastservice";
+import { eventBus } from "@/utils/utils";
+import type { ToastMessageOptions } from "primevue";
 
 const toast = useToast();
 
