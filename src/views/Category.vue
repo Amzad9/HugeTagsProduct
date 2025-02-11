@@ -36,9 +36,9 @@ const onSubmitForm = async () => {
     formData.append('image', category.value.image as File);
 
     if (getUpdatedCategoryId.value) {
-      await api.updateCategory(getUpdatedCategoryId.value, formData as Category);
+      await api.updateCategory(getUpdatedCategoryId.value, formData);
     } else {
-      const response = await api.createCategory(formData as Category);
+      const response = await api.createCategory(formData);
       categoryStore.getCategory();
       categoryStore.formReset();
       console.log(response);

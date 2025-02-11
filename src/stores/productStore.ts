@@ -1,7 +1,7 @@
 import { defineStore, acceptHMRUpdate } from 'pinia';
 import { ref, reactive, watch, onMounted } from 'vue';
 import api from '@/services/api';
-import type { Product } from '@/types/api/category';
+import type { Product } from '@/types/api/product';
 import { useLoaderStore } from './loaderStore';
 
 interface ValidationErrors {

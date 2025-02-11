@@ -1,7 +1,7 @@
 import { onMounted, reactive, ref, watchEffect } from 'vue';
 import api from '@/services/api'
 import { defineStore, acceptHMRUpdate } from 'pinia'
-import type { Category } from '@/types/api/category'
+import type { Brand } from '@/types/api/brand'
 import { useLoaderStore } from './loaderStore';
 
 interface ValidationErrors {
@@ -11,12 +11,12 @@ interface ValidationErrors {
   [key: string]: string;
 }
 export const useBrandStore = defineStore("brand", () => {
-  const brand = reactive<Category>({
+  const brand = reactive<Brand>({
     name: "",
     description: "",
     image: "" as File | string,
   })
-  const brandInfo = ref<Category[]>([])
+  const brandInfo = ref<Brand[]>([])
   const errors = reactive<ValidationErrors>({
     name: "",
     description: "",

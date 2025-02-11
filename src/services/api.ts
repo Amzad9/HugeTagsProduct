@@ -1,4 +1,6 @@
-import type { Category, Product } from "@/types/api/category";
+import type { Category } from "@/types/api/category";
+import type { Product } from "@/types/api/product";
+
 import { service } from "./https";
 
 export default {
@@ -11,10 +13,10 @@ export default {
   async getCategory(id: string) {
     return service.get(`category/${id}`);
   },
-  async createCategory(data: Category) {
+  async createCategory(data: FormData) {
     return service.post("category", data);
   },
-  async updateCategory(id: string, data: Category) {
+  async updateCategory(id: string, data: FormData) {
     return service.patch(`category/${id}`, data);
   },
   async deleteCategory(id: string) {
@@ -26,17 +28,17 @@ export default {
   async getSubCategory(id: string) {
     return service.get(`subcategory/${id}`);
   },
-  async createSubCategory(data: Category) {
+  async createSubCategory(data: FormData) {
     return service.post("subcategory", data);
   },
-  async updateSubCategory(id: string, data: Category) {
+  async updateSubCategory(id: string, data: FormData) {
     return service.patch(`subcategory/${id}`, data);
   },
   async deleteSubCategory(id: string) {
     return service.delete(`subcategory/${id}`);
   },
 
-  async createBrand(data: any) {
+  async createBrand(data: FormData) {
     return service.post("brand", data, {
       headers: {
         "Content-Type": "multipart/form-data"
@@ -46,7 +48,7 @@ export default {
   async deletBrand(id: string) {
     return service.delete(`brand/${id}`);
   },
-  async updateBrand(id: string, data: Category) {
+  async updateBrand(id: string, data: FormData) {
     return service.patch(`brand/${id}`, data, {
       headers: {
         "Content-Type": "multipart/form-data"
@@ -62,14 +64,14 @@ export default {
   async getProduct(id: string) {
     return service.get(`product/${id}`);
   },
-  async createProduct(data: Product) {
+  async createProduct(data: FormData) {
     return service.post("product", data, {
       headers: {
         "Content-Type": "multipart/form-data"
       }
     });
   },
-  async updateProduct(id: string, data: Product) {
+  async updateProduct(id: string, data: FormData) {
     return service.patch(`product/${id}`, data, {
       headers: {
         "Content-Type": "multipart/form-data"
@@ -85,10 +87,10 @@ export default {
   async getOrder(id: string) {
     return service.get(`order/${id}`);
   },
-  async createOrder(data: any) {
+  async createOrder(data: FormData) {
     return service.post("order", data);
   },
-  async updateOrder(id: string, data: any) {
+  async updateOrder(id: string, data: FormData) {
     return service.put(`order/${id}`, data);
   },
   async deleteOrder(id: string) {
@@ -100,10 +102,10 @@ export default {
   async getSetting(id: string) {
     return service.get(`setting/${id}`);
   },
-  async createSetting(data: any) {
+  async createSetting(data: FormData) {
     return service.post("setting", data);
   },
-  async updateSetting(id: string, data: any) {
+  async updateSetting(id: string, data: FormData) {
     return service.put(`setting/${id}`, data);
   },
   async deleteSetting(id: string) {

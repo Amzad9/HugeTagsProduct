@@ -7,7 +7,7 @@ import InputText from "primevue/inputtext";
 import Textarea from "primevue/textarea";
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
-import type { Category } from "@/types/api/category";
+import type { Brand } from "@/types/api/brand";
 import { useToggle } from '@/composables/Toggle';
 import { useBrandStore } from '@/stores/brandStore';
 import { useLoaderStore } from '@/stores/loaderStore';
@@ -19,7 +19,7 @@ const { isToggle, toggle } = useToggle();
 const brandStore = useBrandStore();
 const loaderStore = useLoaderStore();
 const { isLoading } = storeToRefs(loaderStore);
-const { brand, errors, brandInfo, formReset } = storeToRefs(brandStore);
+const { brand, errors, brandInfo } = storeToRefs(brandStore);
 
 const onImageUpload = (event: Event) => {
   const target = event.target as HTMLInputElement;
@@ -51,7 +51,7 @@ const onSubmitForm = async () => {
       const response = await api.createBrand(formData);
       brandStore.fetchBrands();
       console.log(response);
-      formReset();
+      brandStore.formReset();
       isToggle.value = false;
     }
   } catch (error) {
@@ -72,8 +72,8 @@ const deleteBrand = async (id: string) => {
   }
 };
 
-const editBrand = (data: Category) => {
-  console.log("categoryData", data)
+const editBrand = (data: Brand) => {
+  console.log("brandData", data)
   getBrandId.value = data._id as string
   brand.value = { ...data };
   isToggle.value = true;

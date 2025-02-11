@@ -1,13 +1,14 @@
 <script setup lang="ts">
-import { ref, watch, onMounted } from 'vue';
+import { ref } from 'vue';
 import Button from "primevue/button";
 import Drawer from "@/components/Drawer.vue";
 import InputText from "primevue/inputtext";
+import InputNumber from "primevue/inputnumber";
 import Textarea from "primevue/textarea";
 import Dropdown from "primevue/dropdown";
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
-import type { Product } from "@/types/api/category";
+import type { Product } from "@/types/api/product";
 import { useToggle } from '@/composables/Toggle';
 import { useCategoryStore } from '@/stores/categoryStore';
 import { useLoaderStore } from '@/stores/loaderStore';
@@ -27,7 +28,7 @@ const subCategoryStore = useSubCategoryStore();
 const { isLoading } = storeToRefs(loaderStore);
 const { brandInfo } = storeToRefs(brandStore);
 const { productInfo, product, errors } = storeToRefs(productStore);
-const { category, getCategoryData } = storeToRefs(categoryStore);
+const { getCategoryData } = storeToRefs(categoryStore);
 const { getSubCategoryData } = storeToRefs(subCategoryStore);
 const updatedProductId = ref<string>();
 
@@ -38,47 +39,37 @@ const onImageUpload = (event: Event) => {
   }
 };
 
-const formValidation = () => {
-  const requiredFields: (keyof typeof product.value)[] = ['title', 'description', 'price', 'category', 'subcategory', 'brandId', 'stock', 'rating'];
-  let isValid = true;
-  requiredFields.forEach(field => {
-    if (!product.value[field] || product.value[field] === '') {
-      errors.value[field] = 'This field is required';
-      isValid = false;
-    } else {
-      errors.value[field] = '';
-    }
-  });
-  return isValid;
-};
 
 const onSubmitForm = async () => {
-  if (!formValidation()) {
-    console.error("Form validation failed");
-    return;
-  }
+  // if (!formValidation()) {
+  //   console.error("Form validation failed");
+  //   return;
+  // }
   try {
     loaderStore.startLoading();
     const formData = new FormData();
-    formData.append('title', product.value.title);
-    formData.append('description', product.value.description);
-    formData.append('price', String(product.value.price));
+
+    formData.append('title', product.value.title ?? '');
+    formData.append('description', product.value.description ?? '');
+    formData.append('price', product.value.price ?? '');
+    formData.append('stock', String(product.value.stock ?? ''));
+    formData.append('rating', String(product.value.rating ?? ''));
+
 
     if (product.value.image instanceof File) {
       formData.append('image', product.value.image);
     }
 
-    formData.append('category', typeof product.value.category === 'object' && '_id' in product.value.category ? product.value.category._id || '' : '');
-    formData.append('subcategory', typeof product.value.subcategory === 'object' && '_id' in product.value.subcategory ? product.value.subcategory._id || '' : '');
-    formData.append('brand', typeof product.value.brandId === 'object' && '_id' in product.value.brandId ? product.value.brandId._id || '' : '');
-    formData.append('stock', String(product.value.stock));
-    formData.append('rating', String(product.value.rating));
+    formData.append('category', typeof product.value.category === 'object' ? product.value.category._id ?? '' : product.value.category ?? '');
+    formData.append('subcategory', typeof product.value.subcategory === 'object' ? product.value.subcategory._id ?? '' : product.value.subcategory ?? '');
+    formData.append('brand', typeof product.value.brandId === 'object' ? product.value.brandId._id ?? '' : product.value.brandId ?? '');
 
     if (updatedProductId.value) {
       await api.updateProduct(updatedProductId.value, formData);
     } else {
       await api.createProduct(formData);
     }
+
     productStore.fetchProducts();
     productStore.formReset();
     isToggle.value = false;
@@ -88,6 +79,7 @@ const onSubmitForm = async () => {
     loaderStore.stopLoading();
   }
 };
+
 
 const editCategory = (data: Product) => {
   updatedProductId.value = data._id as string;
@@ -185,8 +177,8 @@ const editCategory = (data: Product) => {
       <div class="field mb-4">
         <label for="price"
           class="block font-bold mb-2">stock*</label>
-        <InputText id="stock"
-          v-model:number="product.stock"
+        <InputNumber id="stock"
+          v-model="product.stock"
           class="w-full"
           placeholder="Enter stock" />
         <small class="p-error block">{{
@@ -196,8 +188,8 @@ const editCategory = (data: Product) => {
       <div class="field mb-4">
         <label for="price"
           class="block font-bold mb-2">rating*</label>
-        <InputText id="rating"
-          v-model:number="product.rating"
+        <InputNumber id="rating"
+          v-model="product.rating"
           class="w-full"
           placeholder="Enter rating" />
 

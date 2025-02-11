@@ -58,10 +58,10 @@ const onSubmitForm = async () => {
     }
     console.log("getUpdatedCategoryId", getUpdatedCategoryId.value)
     if (getUpdatedCategoryId.value) {
-      await api.updateSubCategory(getUpdatedCategoryId.value, formData as Category)
+      await api.updateSubCategory(getUpdatedCategoryId.value, formData)
       subCategoryStore.formReset();
     } else {
-      const response = await api.createSubCategory(formData as Category);
+      const response = await api.createSubCategory(formData);
       subCategoryStore.getSubCategory();
       subCategoryStore.formReset();
       isToggle.value = true;
