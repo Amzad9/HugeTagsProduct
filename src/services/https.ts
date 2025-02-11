@@ -6,7 +6,7 @@ import { eventBus } from '@/utils/utils'
 import type { ToastMessageOptions } from "primevue";
 
 export const service = axios.create({
-  baseURL: "http://localhost:8080/api/v2/",
+  baseURL: "https://nichestore.vercel.app/api/v2/",
   headers: {
     "Content-type": "application/json",
   },
