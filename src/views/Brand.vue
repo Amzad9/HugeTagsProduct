@@ -32,22 +32,19 @@ const onImageUpload = (event: Event) => {
 const getBrandId = ref<string>()
 
 const onSubmitForm = async () => {
-  // if (!formValidation()) {
-  //   console.error("Form validation failed");
-  //   return;
-  // }
   try {
     loaderStore.startLoading();
     const formData = new FormData();
     formData.append('name', brand.value.name as string);
     if (brand.value.image instanceof File) {
-      console.log("brand.value.image as File", brand.value.image as File)
       formData.append('image', brand.value.image as File);
     }
-    formData.append('description', brand.value.description as string)
+    formData.append('description', brand.value.description as string);
+
     if (getBrandId.value) {
-      const res = await api.updateBrand(getBrandId.value, formData);
-      if (res && res.data) {
+      const res = await api.updateBrand(getBrandId.value, formData) as { data: { message: string } };
+
+      if (res.data) {
         showToast({
           severity: "success",
           summary: "Success",
@@ -55,17 +52,20 @@ const onSubmitForm = async () => {
           life: 3000,
         } as ToastMessageOptions);
       }
+
       brandStore.formReset();
       isToggle.value = false;
     } else {
-      const response = await api.createBrand(formData);
+      const response = await api.createBrand(formData) as { data: { message: string } };
+
       if (response.status === 201) {
         showToast({
           severity: "success",
           summary: "Success",
-          detail: response?.data?.message,
+          detail: response.data.message,
           life: 3000,
         } as ToastMessageOptions);
+
         brandStore.fetchBrands();
         brandStore.formReset();
         isToggle.value = false;
@@ -76,12 +76,13 @@ const onSubmitForm = async () => {
       showToast({
         severity: "error",
         summary: "Error",
-        detail: (error as { response?: { data?: { message?: string } } }).response?.data?.message,
+        detail: error.message,  // Ensure proper error handling
         life: 3000,
       } as ToastMessageOptions);
     }
   }
 };
+
 
 const deleteBrand = async (id: string) => {
   try {
@@ -92,11 +93,11 @@ const deleteBrand = async (id: string) => {
       detail: res?.data?.message,
       life: 3000,
     } as ToastMessageOptions);
-  } catch (error) {
+  } catch (error: unknown) {
     showToast({
       severity: "error",
       summary: "Error",
-      detail: error.response?.data?.message,
+      detail: error.response?.data?.message || "An unknown error occurred",
       life: 3000,
     } as ToastMessageOptions);
   }
