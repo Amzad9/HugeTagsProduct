@@ -52,11 +52,10 @@ const onSubmitForm = async () => {
           life: 3000,
         } as ToastMessageOptions);
       }
-
       brandStore.formReset();
       isToggle.value = false;
     } else {
-      const response = await api.createBrand(formData) as { data: { message: string } };
+      const response = await api.createBrand(formData) as { status: number, data: { message: string } };
 
       if (response.status === 201) {
         showToast({
@@ -76,12 +75,13 @@ const onSubmitForm = async () => {
       showToast({
         severity: "error",
         summary: "Error",
-        detail: error.message,  // Ensure proper error handling
+        detail: error.message,
         life: 3000,
       } as ToastMessageOptions);
     }
   }
 };
+
 
 
 const deleteBrand = async (id: string) => {
