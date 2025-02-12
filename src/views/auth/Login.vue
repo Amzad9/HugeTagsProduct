@@ -28,7 +28,7 @@ const handleLogin = async () => {
       showToast({
         severity: "success",
         summary: "Success",
-        detail: res.data.message,
+        detail: response.data.message,
         life: 3000,
       } as ToastMessageOptions);
     }
