@@ -3,6 +3,8 @@ import { ref } from 'vue';
 import { AxiosError } from 'axios'
 import { useRouter } from 'vue-router';
 import { useToastComposable } from "@/composables/useToastComposable";
+import type { ToastMessageOptions } from "primevue";
+
 import api from '@/services/api';
 import InputText from 'primevue/inputtext'
 import Password from 'primevue/password'
@@ -13,12 +15,13 @@ const loaderStore = useLoaderStore();
 const contact = ref('');
 const password = ref('');
 const router = useRouter()
-const { showToast } = useToastComposable()
-import type { ToastMessageOptions } from "primevue";
+const { showToast } = useToastComposable();
+
 
 const handleLogin = async () => {
   try {
     const response = await api.login({ contact: contact.value, password: password.value });
+    console.log("response", response.data.message)
     if (response.status === 200) {
       sessionStorage.setItem('token', response.data.token);
       router.push('/')
@@ -48,6 +51,7 @@ const handleLogin = async () => {
     strokeWidth="3"
     animationDuration="1s" />
 </template>
+<Toast />
 <div class="flex items-center justify-center
     min-h-screen">
   <div

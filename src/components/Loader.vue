@@ -15,7 +15,7 @@
 
   <!-- Inline Loader -->
   <div v-if="inline"
-    class="flex items-center justify-center absolute top-52 left-1/2 transform -translate-x-1/2">
+    class="flex items-center justify-center absolute top-52 left-1/2 transform -translate-x-1/2 z-50">
     <ProgressSpinner :style="computedStyle"
       :strokeWidth="strokeWidth"
       :animationDuration="animationDuration"
