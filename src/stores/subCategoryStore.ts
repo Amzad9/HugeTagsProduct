@@ -1,8 +1,8 @@
 import { onMounted, reactive, ref, watchEffect } from 'vue';
 import api from '@/services/api'
 import { defineStore, acceptHMRUpdate } from 'pinia'
-import type { Category } from '@/types/api/category'
-import { useLoaderStore } from './loaderStore';
+import type { SubCategory, SubCategoryResponse, SingleSubCategoryResponse } from "@/types/api/subcategory";
+import type { AxiosResponse } from 'axios';
 
 interface ValidationErrors {
   name: string;
@@ -11,20 +11,18 @@ interface ValidationErrors {
   [key: string]: string;
 }
 export const useSubCategoryStore = defineStore("subcategory", () => {
-  const subcategory = reactive<Category>({
+  const subcategory = reactive<SubCategory>({
     _id: '',
     name: "",
     description: "",
     image: "" as File | string,
   })
-  const getSubCategoryData = ref<Category[]>([])
+  const getSubCategoryData = ref<SubCategory[]>([])
   const errors = reactive<ValidationErrors>({
     name: "",
     description: "",
     image: "",
   })
-  const loaderStore = useLoaderStore();
-  const { startLoading, stopLoading } = loaderStore;
   const formValidation = () => {
     let isValid = true;
     errors.name = subcategory.name ? "" : "Name is required";
@@ -60,7 +58,7 @@ export const useSubCategoryStore = defineStore("subcategory", () => {
 
   const getSubCategory = async () => {
     try {
-      const response = await api.getSubCategories();
+      const response: AxiosResponse<SubCategoryResponse> = await api.getSubCategories();
       console.log("response", response);
       getSubCategoryData.value = response.data.payload;
       console.log(getSubCategoryData.value)
@@ -73,12 +71,12 @@ export const useSubCategoryStore = defineStore("subcategory", () => {
   const deleteCategory = async (id: string) => {
     try {
       const response = await api.deleteSubCategory(id);
-      getSubCategory();
-      console.log(response);
+      await getSubCategory();
+      return response;
     } catch (error) {
       throw error;
     }
-  }
+  };
   onMounted(() => {
     getSubCategory()
   })

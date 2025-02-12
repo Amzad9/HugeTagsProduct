@@ -4,3 +4,16 @@ export interface Brand {
   description?: string;
   image?: string | File;
 }
+export interface BrandResponse {
+  payload: Brand[],
+  message: string;
+  status: string;
+}
+
+export interface SingleBrandResponse {
+  data: {
+    payload: Brand,
+    message: string;
+  },
+  status: string;
+}

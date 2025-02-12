@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
+import { AxiosError } from 'axios';
+
 import Button from "primevue/button";
 import Drawer from "@/components/Drawer.vue";
 import InputText from "primevue/inputtext";
@@ -88,13 +90,15 @@ const onSubmitForm = async () => {
         isToggle.value = false;
       }
     }
-  } catch (error) {
-    showToast({
-      severity: "error",
-      summary: "Error",
-      detail: error.response?.data?.message,
-      life: 3000,
-    } as ToastMessageOptions);
+  } catch (error: unknown) {
+    if (error instanceof AxiosError) {
+      showToast({
+        severity: "error",
+        summary: "Error",
+        detail: error.response?.data?.message,
+        life: 3000,
+      } as ToastMessageOptions);
+    }
   }
 };
 

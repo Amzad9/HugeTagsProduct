@@ -1,5 +1,7 @@
 <script setup lang="ts">
-import { ref, watch, watchEffect } from 'vue';
+import { ref, watch } from 'vue';
+import { AxiosError } from 'axios';
+
 import Button from "primevue/button";
 import Drawer from "@/components/Drawer.vue";
 import InputText from "primevue/inputtext";
@@ -9,7 +11,7 @@ import Column from 'primevue/column';
 
 import Select from 'primevue/select';
 
-import type { Category } from "@/types/api/category";
+import type { SubCategory, SingleSubCategoryResponse } from "@/types/api/subcategory";
 import { useToggle } from '@/composables/Toggle';
 import { useSubCategoryStore } from '@/stores/subCategoryStore';
 import type { ToastMessageOptions } from "primevue";
@@ -59,7 +61,7 @@ const onSubmitForm = async () => {
       showToast({
         severity: "success",
         summary: "Success",
-        detail: res?.data?.message,
+        detail: res.data.message,
         life: 3000,
       } as ToastMessageOptions);
       isToggle.value = false;
@@ -70,21 +72,23 @@ const onSubmitForm = async () => {
         showToast({
           severity: "success",
           summary: "Success",
-          detail: response?.data?.message,
+          detail: response.data.message,
           life: 3000,
         } as ToastMessageOptions);
-        subCategoryStore.getSubCategory();
-        subCategoryStore.formReset();
-        isToggle.value = false;
       }
+      subCategoryStore.getSubCategory();
+      subCategoryStore.formReset();
+      isToggle.value = false;
     }
-  } catch (error) {
-    showToast({
-      severity: "error",
-      summary: "Error",
-      detail: error.response?.data?.message,
-      life: 3000,
-    } as ToastMessageOptions);
+  } catch (error: unknown) {
+    if (error instanceof AxiosError) {
+      showToast({
+        severity: "error",
+        summary: "Error",
+        detail: error.response?.data?.message,
+        life: 3000,
+      } as ToastMessageOptions);
+    }
   }
 }
 const deleteSubCategory = async (id: string) => {
@@ -93,23 +97,26 @@ const deleteSubCategory = async (id: string) => {
     showToast({
       severity: "success",
       summary: "Success",
-      detail: res?.data?.message,
+      detail: res.data.message,
       life: 3000,
     } as ToastMessageOptions);
-  } catch (error) {
-    showToast({
-      severity: "error",
-      summary: "Error",
-      detail: error.response?.data?.message,
-      life: 3000,
-    } as ToastMessageOptions);
+  } catch (error: unknown) {
+    if (error instanceof AxiosError) {
+      showToast({
+        severity: "error",
+        summary: "Error",
+        detail: error.response?.data?.message,
+        life: 3000,
+      } as ToastMessageOptions);
+    }
   }
 };
 
-const editSubCategory = (categoryData: Category) => {
-  console.log("categoryData", categoryData)
-  getUpdatedCategoryId.value = categoryData._id as string
-  subcategory.value = { ...categoryData };
+
+const editSubCategory = (data: SubCategory) => {
+  console.log("categoryData", data)
+  getUpdatedCategoryId.value = data._id as string
+  subcategory.value = { ...data };
   isToggle.value = true;
 };
 

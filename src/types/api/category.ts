@@ -1,12 +1,21 @@
 export interface Category {
   _id?: string;
-  categoryId?: string
   name?: string;
   description?: string;
   image?: string | File;
 }
 export interface CategoryResponse {
-  data: { payload: Category[]; message: string; };
+  payload: Category[];
+  message: string;
+  status: string;
+}
+
+export interface SingleCategoryResponse {
+  data: {
+    payload: Category;
+    message: string;
+  }
+  status: string;
 }
 
 

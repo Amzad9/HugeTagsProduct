@@ -11,3 +11,13 @@ export interface Product {
   rating?: number | null;
   reviews?: string[]
 }
+export interface ProductResponse {
+  payload: Product[],
+  message: string;
+  status: string;
+}
+export interface SingleProductResponse {
+  payload: Product,
+  message: string;
+  status: string;
+}

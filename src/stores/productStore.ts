@@ -1,8 +1,8 @@
 import { defineStore, acceptHMRUpdate } from 'pinia';
 import { ref, reactive, watch, onMounted } from 'vue';
+
 import api from '@/services/api';
 import type { Product } from '@/types/api/product';
-import { useLoaderStore } from './loaderStore';
 import { useToastComposable } from "@/composables/useToastComposable";
 import type { ToastMessageOptions } from 'primevue';
 
@@ -47,8 +47,6 @@ export const useProductStore = defineStore('product', () => {
     rating: 0,
   });
 
-  const loaderStore = useLoaderStore();
-  const { startLoading, stopLoading } = loaderStore;
 
   const formValidation = () => {
     let isValid = true;

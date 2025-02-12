@@ -60,6 +60,7 @@ export const useCategoryStore = defineStore("category", () => {
       const response = await api.deleteCategory(id);
       getCategory();
       console.log(response);
+      return response
     } catch (error) {
       throw error;
     }

@@ -63,6 +63,7 @@ export const useBrandStore = defineStore("brand", () => {
       const response = await api.deletBrand(id);
       fetchBrands();
       console.log(response);
+      return response;
     } catch (error) {
       throw error;
     }
