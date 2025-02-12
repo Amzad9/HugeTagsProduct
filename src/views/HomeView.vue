@@ -20,7 +20,12 @@ const loaderStore = useLoaderStore();
   <template #default>
     <Card class="relative">
       <template #content>
-        <Loader :loader="loaderStore.isLoading" />
+        <template v-if="loaderStore.isLoading">
+          <Loader inline
+            size="120px"
+            strokeWidth="3"
+            animationDuration="1s" />
+        </template>
         <RouterView />
       </template>
     </Card>
